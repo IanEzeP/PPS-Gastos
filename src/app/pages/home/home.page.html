@@ -9,6 +9,18 @@
 <ion-content class="ion-padding">
   <div class="home">
 
+    <ion-button (click)="openModal('ingreso')">
+      Cargar sueldo
+    </ion-button>
+    <ion-button (click)="openModal('egreso')">
+      Cargar gasto
+    </ion-button>
+    <ion-button (click)="openModal('umbral')">
+      Establecer umbral mensual
+    </ion-button>
+    <ion-button (click)="navigate()">
+      Visualizar gráfico de gastos
+    </ion-button>
     <ion-fab slot="fixed" vertical="bottom" horizontal="start">
       <ion-fab-button color="danger" (click)="cerraSesion()"><ion-icon name="power-sharp" size="large"></ion-icon></ion-fab-button>
     </ion-fab>

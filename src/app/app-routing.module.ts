@@ -14,7 +14,23 @@ const routes: Routes = [
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+  },  {
+    path: 'graphs',
+    loadChildren: () => import('./pages/graphs/graphs.module').then( m => m.GraphsPageModule)
   },
+  {
+    path: 'income',
+    loadChildren: () => import('./pages/income/income.module').then( m => m.IncomePageModule)
+  },
+  {
+    path: 'discharge',
+    loadChildren: () => import('./pages/discharge/discharge.module').then( m => m.DischargePageModule)
+  },
+  {
+    path: 'umbral',
+    loadChildren: () => import('./pages/umbral/umbral.module').then( m => m.UmbralPageModule)
+  },
+
 ];
 
 @NgModule({
