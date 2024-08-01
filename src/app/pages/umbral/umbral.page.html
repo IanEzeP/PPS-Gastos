@@ -2,16 +2,23 @@
   <ion-toolbar>
     <ion-title>Umbral de gasto</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="this.goBack()">Close</ion-button>
+      <ion-button color="light" (click)="this.cancelar()">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <h1>Establecer umbral mensual</h1>
-  
-  <ion-input fill="solid" type="number"></ion-input><!-- de 0 a 100% -->
+  <h2>Establecer umbral mensual</h2>
 
-  <ion-button expand="block">Cargar umbral</ion-button>
+  <h2>Umbral: {{ umbral }}%</h2>
+  
+  <ion-range min="0" max="100" step="1" (ionInput)="onIonInput($event)">
+    <ion-label slot="start">1</ion-label>
+    <ion-label slot="end">100</ion-label>
+  </ion-range>
+
+  <ion-button expand="block" (click)="cargar()" [disabled]="umbral == ''">
+    Cargar umbral
+  </ion-button>
   
 </ion-content>

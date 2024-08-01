@@ -8,13 +8,27 @@ import { ModalController } from '@ionic/angular';
 })
 export class IncomePage implements OnInit {
 
+  public data: any;
+  public fecha: Date = new Date();
+  public ingreso: number = 0;
+
   constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
 
-  goBack() {
-    return this.modalCtrl.dismiss();
+  cargar() {
+    this.data = {
+      mes: this.fecha.getMonth() + 1,
+      anio: this.fecha.getFullYear(),
+      ingreso: this.ingreso
+    };
+
+    return this.modalCtrl.dismiss(this.data, 'accept');
+  }
+
+  cancelar() {
+    return this.modalCtrl.dismiss(null, 'cancel');
   }
 
 }

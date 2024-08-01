@@ -8,6 +8,11 @@
 
 <ion-content class="ion-padding">
   <div class="home">
+    <ion-list>
+      <ion-item>Sueldo: {{ this.sueldoMensual.ingreso }} cargado: {{this.sueldoCargado}}</ion-item>
+      <ion-item>Umbral: {{ this.umbralMensual.umbral }} cargado: {{this.umbralCargado}}</ion-item>
+      <ion-item>Gastos: {{ this.gastosMensuales }} cargado: {{this.gastosCargados}}</ion-item>
+    </ion-list>
 
     <ion-button (click)="openModal('ingreso')">
       Cargar sueldo

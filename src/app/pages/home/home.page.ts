@@ -49,7 +49,14 @@ export class HomePage implements OnInit, OnDestroy {
       })
     ));
 
-    this.subsGastos = obsGastos.subscribe((data: any[]) => {
+    this.subsGastos = obsGastos.subscribe(((data: any[]) => {
+      this.sueldoCargado = false;
+      this.umbralCargado = false;
+      this.gastosCargados = false;
+      this.sueldoMensual = 0;
+      this.umbralMensual = 0;
+      this.gastosMensuales = 0;
+      this.usersGastos = [];
       this.usersGastos = data;
       console.log(this.usersGastos);
       let userInDB = this.usersGastos.find(doc => doc.idUsuario == this.auth.id);
@@ -57,16 +64,18 @@ export class HomePage implements OnInit, OnDestroy {
       if (userInDB != undefined) {
         this.cargarDataMes(userInDB);
       } else {
-        const newId = this.firestore.createId();
-        const doc = this.firestore.doc("gastos-usuarios/" + newId);
-        doc.set({
-          idUsuario: this.auth.id,
-          sueldo: [],
-          umbral: [],
-          gastos: []
-        });
+        if (this.auth.logueado) {
+          const newId = this.firestore.createId();
+          const doc = this.firestore.doc("gastos-usuarios/" + newId);
+          doc.set({
+            idUsuario: this.auth.id,
+            sueldo: [],
+            umbral: [],
+            gastos: []
+          });
+        }
       }
-    });
+    }));
   }
 
   ngOnDestroy(): void {
@@ -75,9 +84,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   cargarDataMes(user: any) {
     let fecha = new Date();
-    let ultSueldo = user.sueldo.pop();
-    let ultUmbral = user.umbral.pop();
-    let ultGastos = user.gastos.pop();
+    let auxUser = { gastos: user.gastos, sueldo: user.sueldo, umbral: user.umbral};
+    let ultSueldo = auxUser.sueldo[auxUser.sueldo.length - 1];
+    let ultUmbral = auxUser.umbral[auxUser.sueldo.length - 1];
+    let ultGastos = auxUser.gastos[auxUser.sueldo.length - 1];
 
     if (ultSueldo != undefined && ultSueldo.mes == (fecha.getMonth() + 1) && ultSueldo.anio == fecha.getFullYear()) {
       this.sueldoMensual = ultSueldo; 
@@ -94,35 +104,63 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async openModal(option: string) {
-    let component : any;
+    let component : any = '';
     switch (option) {
       case 'ingreso':
-        component = IncomePage;//seetAlert preguntando si quiere actualizar el sueldo (CASO QUE ESTÉ CARGADO)
+        if (this.sueldoCargado) {
+          await Swal.fire({
+          heightAuto: false,
+          title: 'Su sueldo ya se encuentra cargado',
+          text: '¿Desea actualizar el importe?',
+          showConfirmButton: true,
+          confirmButtonText: 'Si',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar'
+          }).then(res => {
+            if (res.isConfirmed) {
+              component = IncomePage;
+            }
+          });
+        } else {
+          component = IncomePage;
+        }        
         break;
       case 'egreso':
         component = DischargePage;
         break;
       case 'umbral':
-        component = UmbralPage;
+        if (this.umbralCargado) {
+          await Swal.fire({
+          heightAuto: false,
+          title: 'El umbral ya fue establecido',
+          text: '¿Desea cambiarlo?',
+          showConfirmButton: true,
+          confirmButtonText: 'Si',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar'
+          }).then(res => {
+            if (res.isConfirmed) {
+              component = UmbralPage;
+            }
+          });
+        } else {
+          component = UmbralPage;
+        }   
         break;
     }
 
-    const modal = await this.modalCtrl.create({
-      component: component,
-      componentProps: { 
-        cargoSueldo: this.sueldoCargado,
-        sueldo: this.sueldoMensual,
-        cargoUmbral: this.umbralCargado,
-        umbral: this.umbralMensual
+    if(component != '') {
+      const modal = await this.modalCtrl.create({
+        component: component
+      });
+      
+      modal.present();
+  
+      const { data, role } = await modal.onWillDismiss();
+      
+      if(role != 'cancel') {
+        this.updateUser(option, data);
       }
-    });
-    
-    modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-    
-    if(role != 'cancel') {
-      this.updateUser(option, data);
     }
   }
 
@@ -131,36 +169,67 @@ export class HomePage implements OnInit, OnDestroy {
 
     if (userInDB != undefined) {
       let newData = {};
-      let nuevoEgreso: any;
 
       switch (action) {
         case 'ingreso':
           this.sueldoMensual = data;
-          if (this.sueldoCargado) {
-            this.usersGastos.findIndex(sueldo => sueldo.mes == this.sueldoMensual.mes && sueldo.anio == this.sueldoMensual.anio);
+          if (this.sueldoCargado) {//Este sería el caso en que el ingreso ya estaba cargado pero decido actualizarlo
             let index = userInDB.sueldo.findIndex((sueldo: any) => sueldo.mes == this.sueldoMensual.mes && sueldo.anio == this.sueldoMensual.anio);
-            console.log(index);
-            if(index > -1) {
+            console.log(index);//Verificacion
+            if (index > -1) {
               userInDB.sueldo[index] = this.sueldoMensual;
               newData = { sueldo: userInDB.sueldo };
             } else {
-              newData = { sueldo: userInDB.sueldo.push(this.sueldoMensual) };
+              userInDB.sueldo.push(this.sueldoMensual)
+              newData = { sueldo: userInDB.sueldo };
             }
           } else {
-            newData = { sueldo: userInDB.sueldo.push(this.sueldoMensual) };
+            userInDB.sueldo.push(this.sueldoMensual);
+            newData = { sueldo: userInDB.sueldo };
             this.sueldoCargado = true;
           }
           break;
         case 'egreso':
-          nuevoEgreso = data;
-          newData = { gastos: userInDB.gastos.push(this.sueldoMensual) };
+          if (this.gastosCargados) {
+            let index = userInDB.gastos.findIndex((gasto: any) => gasto.mes == data.mes && gasto.anio == data.anio);
+            console.log(index);
+            if (index > -1) {
+              userInDB.gastos[index].egresos.push({ importe: data.importe, categoria: data.categoria});
+              newData = { gastos: userInDB.gastos };
+            } else {
+              this.gastosMensuales = { mes: data.mes, anio: data.anio, egresos: [{importe: data.importe, categoria: data.categoria}]}
+              userInDB.gastos.push(this.gastosMensuales);
+              newData = { gastos: userInDB.gastos };
+            }
+          } else {
+            this.gastosMensuales = { mes: data.mes, anio: data.anio, egresos: [{importe: data.importe, categoria: data.categoria}]}
+            userInDB.gastos.push(this.gastosMensuales);
+            newData = { gastos: userInDB.gastos };
+            this.gastosCargados = true;
+          }
           break;
         case 'umbral':
-          this.umbralCargado = true;
           this.umbralMensual = data;
-          newData = { umbral: userInDB.umbral.push(this.umbralMensual) };
+          if (this.umbralCargado) {
+            let index = userInDB.umbral.findIndex((umbral: any) => umbral.mes == this.umbralMensual.mes && umbral.anio == this.umbralMensual.anio);
+            console.log(index);
+            if (index > -1) {
+              userInDB.umbral[index] = this.umbralMensual;
+              newData = { umbral: userInDB.umbral };
+            } else {
+              userInDB.umbral.push(this.umbralMensual);
+              newData = { umbral: userInDB.umbral };
+            }
+          } else {
+            userInDB.umbral.push(this.umbralMensual);
+            newData = { umbral: userInDB.umbral };
+            this.umbralCargado = true;
+          }
           break;
       }
+
+      const doc = this.firestore.doc("gastos-usuarios/" + userInDB.id);
+      doc.update(newData);
     }
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, RangeCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-umbral',
@@ -8,12 +8,30 @@ import { ModalController } from '@ionic/angular';
 })
 export class UmbralPage implements OnInit {
 
+  public data: any;
+  public umbral: any = '';
+  public fecha: Date = new Date();
+
   constructor(private modalCtrl: ModalController) { }
 
   ngOnInit() {
   }
 
-  goBack() {
-    return this.modalCtrl.dismiss();
+  onIonInput(ev: Event) {
+    this.umbral = (ev as RangeCustomEvent).detail.value;
+  }
+
+  cargar() {
+    this.data = {
+      mes: this.fecha.getMonth() + 1,
+      anio: this.fecha.getFullYear(),
+      umbral: this.umbral
+    };
+
+    return this.modalCtrl.dismiss(this.data, 'accept');
+  }
+
+  cancelar() {
+    return this.modalCtrl.dismiss(null, 'cancel');
   }
 }

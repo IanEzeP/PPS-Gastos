@@ -2,25 +2,27 @@
   <ion-toolbar>
     <ion-title>Cargar gastos</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="this.goBack()">Close</ion-button>
+      <ion-button color="light" (click)="this.cancelar()">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <h1>Egreso</h1>
+  <h2>Egreso</h2>
   
-  <ion-input fill="solid" type="number"></ion-input>
+  <ion-input fill="solid" type="number" [(ngModel)]="importe"></ion-input>
 
-  <h1>Categoría</h1>
-  <ion-select fill="solid" interface="popover" >
-    <ion-select-option>Alimentos</ion-select-option>
-    <ion-select-option>Transporte</ion-select-option>
-    <ion-select-option>Salud</ion-select-option>
-    <ion-select-option>Impuestos</ion-select-option>
-    <ion-select-option>Servicios</ion-select-option>
+  <h2>Categoría</h2>
+  <ion-select fill="solid" interface="popover" (ionChange)="onIonChange($event)">
+    <ion-select-option value="alimentos">Alimentos</ion-select-option>
+    <ion-select-option value="transporte">Transporte</ion-select-option>
+    <ion-select-option value="salud">Salud</ion-select-option>
+    <ion-select-option value="impuestos">Impuestos</ion-select-option>
+    <ion-select-option value="servicios">Servicios</ion-select-option>
   </ion-select>
 
-  <ion-button expand="block">Cargar egreso</ion-button>
+  <ion-button expand="block" [disabled]="categoria == '' || importe == 0" (click)="cargar()">
+    Cargar egreso
+  </ion-button>
   
 </ion-content>
