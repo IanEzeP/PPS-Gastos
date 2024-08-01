@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Cargar gastos</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="this.cancelar()">Close</ion-button>
+      <ion-button color="light" (click)="this.cancelar()">Cancelar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,7 +10,7 @@
 <ion-content>
   <h2>Egreso</h2>
   
-  <ion-input fill="solid" type="number" [(ngModel)]="importe"></ion-input>
+  <ion-input fill="solid" placeholder="0" type="number" [(ngModel)]="importe"></ion-input>
 
   <h2>Categoría</h2>
   <ion-select fill="solid" interface="popover" (ionChange)="onIonChange($event)">
@@ -21,7 +21,7 @@
     <ion-select-option value="servicios">Servicios</ion-select-option>
   </ion-select>
 
-  <ion-button expand="block" [disabled]="categoria == '' || importe == 0" (click)="cargar()">
+  <ion-button class="confirm" color="success" expand="block" [disabled]="categoria == '' || importe == 0" (click)="cargar()">
     Cargar egreso
   </ion-button>
   

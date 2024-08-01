@@ -9,7 +9,7 @@ import { ModalController } from '@ionic/angular';
 export class DischargePage implements OnInit {
 
   public data: any;
-  public importe: number = 0;
+  public importe: any | number = '';
   public categoria: any = '';
   public fecha: Date = new Date();
 

@@ -17,9 +17,9 @@ import { UmbralPage } from '../umbral/umbral.page';
 })
 export class HomePage implements OnInit, OnDestroy {
   /**
-   * 1. Cargar sueldo/ingreso mensual <-- Cargo en BD objeto con importe de ingreso, mes y año (Si ya está cargado, preguntar si quiere actualizarlo)
+   * 1. Cargar sueldo/ingreso mensual <-- Cargo en BD objeto con importe de ingreso, mes y año (Si ya está cargado, preguntar si quiere actualizarlo) LISTO
    * 2. Poder establecer un umbral de gasto mensual (porcentual respecto al ingreso mensual) <-- Sería como un piso que no debe ser mayor al ingreso mensual, que se tiene que mostrar en porcentaje y que tiene que avisar cuando es superado
-   * 3. Poder cargar gastos/egresos en el mes (con categoría) <-- Cargo en BD objeto con el mes y año y un array que guarde categoría e importe.
+   * 3. Poder cargar gastos/egresos en el mes (con categoría) <-- Cargo en BD objeto con el mes y año y un array que guarde categoría e importe. LISTO
    * 4. 
    *  a- Visualizar gráfico de gastos en el mes, en grafico de torta dividido por categoría.
    *  b- Visualizar gráfico de gastos y ahorro anual, en gráfico de barras.
@@ -31,6 +31,12 @@ export class HomePage implements OnInit, OnDestroy {
   public sueldoMensual: any = 0;
   public umbralMensual: any = 0;
   public gastosMensuales: any = 0;
+
+  public gastoTotal: number = 0;
+  public calculoUmbral: number = 0;
+  public umbralSuperado = false;
+
+  public meses: Array<string> = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   private usersGastos: Array<any> = [];
   private subsGastos: Subscription = Subscription.EMPTY;
@@ -56,6 +62,8 @@ export class HomePage implements OnInit, OnDestroy {
       this.sueldoMensual = 0;
       this.umbralMensual = 0;
       this.gastosMensuales = 0;
+      this.gastoTotal = 0;
+      this.calculoUmbral = 0;
       this.usersGastos = [];
       this.usersGastos = data;
       console.log(this.usersGastos);
@@ -86,8 +94,8 @@ export class HomePage implements OnInit, OnDestroy {
     let fecha = new Date();
     let auxUser = { gastos: user.gastos, sueldo: user.sueldo, umbral: user.umbral};
     let ultSueldo = auxUser.sueldo[auxUser.sueldo.length - 1];
-    let ultUmbral = auxUser.umbral[auxUser.sueldo.length - 1];
-    let ultGastos = auxUser.gastos[auxUser.sueldo.length - 1];
+    let ultUmbral = auxUser.umbral[auxUser.umbral.length - 1];
+    let ultGastos = auxUser.gastos[auxUser.gastos.length - 1];
 
     if (ultSueldo != undefined && ultSueldo.mes == (fecha.getMonth() + 1) && ultSueldo.anio == fecha.getFullYear()) {
       this.sueldoMensual = ultSueldo; 
@@ -100,13 +108,34 @@ export class HomePage implements OnInit, OnDestroy {
     if (ultGastos != undefined && ultGastos.mes == (fecha.getMonth() + 1) && ultGastos.anio == fecha.getFullYear()) {
       this.gastosMensuales = ultGastos; 
       this.gastosCargados = true;
+      this.gastosMensuales.egresos.forEach((egreso: any) => {
+        this.gastoTotal += egreso.importe;
+      });
+    }
+
+    this.calcularUmbral();
+  }
+
+  calcularUmbral() {
+    if(this.sueldoCargado == true && this.umbralCargado == true) {
+      let calc = (this.sueldoMensual.ingreso * this.umbralMensual.umbral) / 100;
+      console.log(calc)
+      this.calculoUmbral = calc;
+
+      if(this.calculoUmbral < this.gastoTotal) {
+        this.umbralSuperado = true;
+      } else {
+        this.umbralSuperado = false;
+      }
     }
   }
 
   async openModal(option: string) {
     let component : any = '';
+
     switch (option) {
       case 'ingreso':
+
         if (this.sueldoCargado) {
           await Swal.fire({
           heightAuto: false,
@@ -129,6 +158,7 @@ export class HomePage implements OnInit, OnDestroy {
         component = DischargePage;
         break;
       case 'umbral':
+
         if (this.umbralCargado) {
           await Swal.fire({
           heightAuto: false,
@@ -173,9 +203,11 @@ export class HomePage implements OnInit, OnDestroy {
       switch (action) {
         case 'ingreso':
           this.sueldoMensual = data;
+
           if (this.sueldoCargado) {//Este sería el caso en que el ingreso ya estaba cargado pero decido actualizarlo
             let index = userInDB.sueldo.findIndex((sueldo: any) => sueldo.mes == this.sueldoMensual.mes && sueldo.anio == this.sueldoMensual.anio);
-            console.log(index);//Verificacion
+            console.log(index);
+
             if (index > -1) {
               userInDB.sueldo[index] = this.sueldoMensual;
               newData = { sueldo: userInDB.sueldo };
@@ -190,9 +222,11 @@ export class HomePage implements OnInit, OnDestroy {
           }
           break;
         case 'egreso':
+
           if (this.gastosCargados) {
             let index = userInDB.gastos.findIndex((gasto: any) => gasto.mes == data.mes && gasto.anio == data.anio);
             console.log(index);
+
             if (index > -1) {
               userInDB.gastos[index].egresos.push({ importe: data.importe, categoria: data.categoria});
               newData = { gastos: userInDB.gastos };
@@ -210,9 +244,11 @@ export class HomePage implements OnInit, OnDestroy {
           break;
         case 'umbral':
           this.umbralMensual = data;
+
           if (this.umbralCargado) {
             let index = userInDB.umbral.findIndex((umbral: any) => umbral.mes == this.umbralMensual.mes && umbral.anio == this.umbralMensual.anio);
             console.log(index);
+
             if (index > -1) {
               userInDB.umbral[index] = this.umbralMensual;
               newData = { umbral: userInDB.umbral };
@@ -230,6 +266,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       const doc = this.firestore.doc("gastos-usuarios/" + userInDB.id);
       doc.update(newData);
+      this.calcularUmbral();
     }
   }
 

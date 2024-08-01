@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Umbral de gasto</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="this.cancelar()">Close</ion-button>
+      <ion-button color="light" (click)="this.cancelar()">Cancelar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -17,7 +17,7 @@
     <ion-label slot="end">100</ion-label>
   </ion-range>
 
-  <ion-button expand="block" (click)="cargar()" [disabled]="umbral == ''">
+  <ion-button class="confirm" color="success" expand="block" (click)="cargar()" [disabled]="umbral == ''">
     Cargar umbral
   </ion-button>
   

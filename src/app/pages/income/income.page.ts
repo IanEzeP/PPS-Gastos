@@ -10,7 +10,7 @@ export class IncomePage implements OnInit {
 
   public data: any;
   public fecha: Date = new Date();
-  public ingreso: number = 0;
+  public ingreso: any | number = '';
 
   constructor(private modalCtrl: ModalController) { }
 

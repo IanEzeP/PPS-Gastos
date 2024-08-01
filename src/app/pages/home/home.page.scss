@@ -2,19 +2,38 @@
 div.home {
   height: 100%;
   width: 100%;
+
+  color: #ffffff;
+  background-color: #1d1c1c;
+  border: solid 3px #2bff00a2;
+  border-radius: 10px;
 }
 
 ion-content {
   --overflow: hidden;
-  --background: rgb(0, 88, 104);
+  --background: #144909;
 }
 
 ion-button {
   text-transform: initial;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: 3%;
-  margin-top: 3%;
-  font-size: 2rem;
+  //margin-left: 0.5rem;
+  //margin-right: 0.5rem;
+  //margin-bottom: 3%;
+  //margin-top: 3%;
   font-weight: 600;
+  height: 100%;
+  width: 100%;
+}
+
+ion-grid {
+  margin-top: 80%;
+  width: 100%;
+}
+
+ion-col.head {
+  height: 120px;
+}
+
+ion-col.body {
+  height: 140px;
 }

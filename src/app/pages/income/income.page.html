@@ -2,17 +2,17 @@
   <ion-toolbar>
     <ion-title>Cargar sueldo</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="light" (click)="cancelar()">Close</ion-button>
+      <ion-button color="light" (click)="cancelar()">Cancelar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <h2>Ingreso</h2>
+  <h1>Ingreso</h1>
   
-  <ion-input fill="solid" type="number" [(ngModel)]="ingreso"></ion-input>
+  <ion-input fill="solid" type="number" placeholder="0" [(ngModel)]="ingreso"></ion-input>
 
-  <ion-button expand="block" (click)="cargar()" [disabled]="ingreso == 0">
+  <ion-button class="confirm" color="success" expand="block" (click)="cargar()" [disabled]="ingreso == 0">
     Cargar ingreso
   </ion-button>
   

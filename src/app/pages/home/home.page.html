@@ -8,12 +8,38 @@
 
 <ion-content class="ion-padding">
   <div class="home">
-    <ion-list>
-      <ion-item>Sueldo: {{ this.sueldoMensual.ingreso }} cargado: {{this.sueldoCargado}}</ion-item>
-      <ion-item>Umbral: {{ this.umbralMensual.umbral }} cargado: {{this.umbralCargado}}</ion-item>
-      <ion-item>Gastos: {{ this.gastosMensuales }} cargado: {{this.gastosCargados}}</ion-item>
-    </ion-list>
-
+    
+    <h1>Gastos: {{ this.gastoTotal | currency : 'USD' : 'symbol' :'4.2-2'}} Umbral superado: {{ this.umbralSuperado ? 'Si' : 'No'}}</h1>
+    <h2>Sueldo: ${{ this.sueldoMensual.ingreso }} </h2>
+    <h2>Umbral: {{ this.umbralMensual.umbral }}% Cálculo: {{this.calculoUmbral}}</h2>
+    
+    <ion-grid>
+      <ion-row>
+        <ion-col class="head">
+          <ion-button color="tertiary" (click)="openModal('ingreso')">
+            Cargar Sueldo
+          </ion-button>
+        </ion-col>
+        <ion-col class="head">
+          <ion-button color="tertiary" (click)="openModal('egreso')">
+            Cargar Gasto
+          </ion-button>
+        </ion-col>
+        <ion-col class="head">
+          <ion-button color="tertiary" (click)="openModal('umbral')">
+            Establecer Umbral
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="body">
+            <ion-button style="font-size: 1.2rem;" color="secondary" (click)="navigate()">
+            Visualizar gráficos de gastos
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+<!--
     <ion-button (click)="openModal('ingreso')">
       Cargar sueldo
     </ion-button>
@@ -25,7 +51,7 @@
     </ion-button>
     <ion-button (click)="navigate()">
       Visualizar gráfico de gastos
-    </ion-button>
+    </ion-button>-->
     <ion-fab slot="fixed" vertical="bottom" horizontal="start">
       <ion-fab-button color="danger" (click)="cerraSesion()"><ion-icon name="power-sharp" size="large"></ion-icon></ion-fab-button>
     </ion-fab>
