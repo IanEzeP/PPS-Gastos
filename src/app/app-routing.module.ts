@@ -12,9 +12,10 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'anim-splash',
     pathMatch: 'full'
-  },  {
+  },
+  {
     path: 'graphs',
     loadChildren: () => import('./pages/graphs/graphs.module').then( m => m.GraphsPageModule)
   },
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'umbral',
     loadChildren: () => import('./pages/umbral/umbral.module').then( m => m.UmbralPageModule)
+  },
+  {
+    path: 'anim-splash',
+    loadChildren: () => import('./anim-splash/anim-splash.module').then( m => m.AnimSplashPageModule)
   },
 
 ];

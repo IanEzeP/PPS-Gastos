@@ -5,21 +5,21 @@
 
   <div class="container">
 
-    <img src="../../../assets/icon.png" alt="Logo" style="max-width: 50%; max-height: 50%; margin: auto;
-    display: block; margin-top: 40px;">
+    <img src="../../../assets/icon_gastos_png.png" alt="Logo" style="max-width: 62%; max-height: 62%; margin: auto;
+    display: block; margin-top: 60px;">
 
-    <h1>Control de gastos</h1>
+    <h2>Ingrese sus datos de sesión</h2>
     
     <div *ngIf="this.cargaFin == true; then mostrar else esperar"></div>
 
     <ng-template #mostrar>
-      <ion-fab vertical="bottom">
+      <ion-fab vertical="top">
         <ion-fab-button>
-          <ion-icon name="person-outline" size="large"></ion-icon>
+          <ion-icon name="person" size="large"></ion-icon>
         </ion-fab-button>
-        <ion-fab-list style="margin-left: -45px;" side="top">
+        <ion-fab-list style="margin-left: -45px;" side="bottom">
           <ion-button class="users" shape="round" *ngFor="let item of arrayFirebase" (click)="fastLogin(item.correo, item.clave)">
-            <ion-icon name="person"></ion-icon>&nbsp;
+            <ion-icon name="person-outline"></ion-icon>&nbsp;
             <ion-label>{{ item.perfil }}</ion-label>
           </ion-button>
         </ion-fab-list>
@@ -27,17 +27,17 @@
     </ng-template>
 
     <ng-template #esperar>
-      <ion-fab vertical="bottom">
+      <ion-fab vertical="top">
         <ion-fab-button>
-          <ion-icon name="person-outline" size="large"></ion-icon>
+          <ion-icon name="person" size="large"></ion-icon>
         </ion-fab-button>
       </ion-fab>
     </ng-template>
 
     <form class="needs-validation" [formGroup]="formLog">
-      <ion-input fill="outline" shape="round" label="Correo:" labelPlacement="stacked" type="email"  formControlName="email"></ion-input>
-      <ion-input fill="outline" shape="round" label="Clave:" type="password" labelPlacement="stacked" formControlName="password"></ion-input>
-      <ion-button class="login" (click)="this.iniciarSesion()">Ingresar</ion-button>
+      <ion-input fill="outline" label="Correo:" labelPlacement="stacked" type="email"  formControlName="email"></ion-input>
+      <ion-input fill="outline" label="Clave:" type="password" labelPlacement="stacked" formControlName="password"></ion-input>
+      <ion-button class="login" (click)="this.iniciarSesion()">Iniciar Sesión</ion-button>
     </form>
 
   </div>

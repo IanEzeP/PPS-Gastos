@@ -1,46 +1,48 @@
 
 ion-content {
-    --background: linear-gradient(#a5ee15, #33e7ba);
+    --background: linear-gradient(#157aee, #e73333);
 }
 
 div.container {
-    height: 90%;
+    height: 95%;
     width: 90%;
     margin-top: 5%;
     margin-left: 5%;
 
-    border: 5px solid rgb(0, 88, 104);
+    border: 5px solid rgb(0, 0, 0);
     border-radius: 10px;
     --overflow: hidden;
 
 }
 
-h1 {
-    font-size: 50px;
+h2 {
+    font-size: 26px;
     font-weight: 600;
-    margin-top: 20px;
-    margin-left: 10%;
-    margin-bottom: -15px;
+    margin-top: 60px;
+    margin-left: 2%;
+    color: var(--ion-color-light);
+
 }
 
 ion-input {
-    margin-top: 45px;
+    margin-top: 55px;
     margin-left: 10px;
     font-size: 24px;
 
     width: 94%;
 
+    --border-color: var(--ion-color-medium)
     --border-width: 3px;
-    color: var(--ion-color-dark);
-    --highlight-color-valid: var(--ion-color-tertiary);
+    color: var(--ion-color-light);
+    --highlight-color-valid: var(--ion-color-success);
 }
 
 ion-button.login {
     text-transform: initial;
-    --background: rgb(211, 143, 6);
+    --background: rgb(8, 85, 21);
     margin-top: 60px;
     margin-left: 23px;
-    height: 100px;
+    height: 80px;
     width: 320px;
 
     font-weight: 600;
@@ -48,17 +50,22 @@ ion-button.login {
 }
 
 ion-button.users {
-    --background: rgb(0, 88, 104);
+    --background: rgb(0, 0, 0);
     text-transform: initial;
     margin-bottom: 7px;
     margin-left: 160px;
+    margin-bottom: -5rem;
+
 }
 
 ion-fab-button {
-    --background: rgb(0, 88, 104);
+    --background: rgb(0, 0, 0);
     margin-left: 154px;
+    margin-bottom: -5rem;
+
 }
 
 ion-fab-list {
-    margin-bottom: 54px;
+    margin-bottom: -5rem;
+
 }
