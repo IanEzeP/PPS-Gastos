@@ -1,43 +1,62 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Gráficos de gastos</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="dark" (click)="this.goBack()">Close</ion-button>
+      <ion-button fill="solid" style="height: 50px; width: 100px;" color="dark" (click)="this.goBack()">Volver</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <h1>Gastos del mes</h1>
+  <ion-card>
+    <h1 style="text-align: center; font-weight: 600; color: black;">Gastos del mes</h1>
+  </ion-card>
+  
   <div class="graph">
     <div *ngIf="this.viewPieChart == true, then torta else barras"></div>
       <ng-template #torta>
-        <h2>{{ meses[mesNum -1] }} {{ anio }}</h2>
-        <canvasjs-chart 
-        [options]="chartOptionsPie" [styles]="{width: '100%', height:'400px'}"
-        (chartInstance)="getChartInstance($event)"></canvasjs-chart>
-
-        
+        <ion-card>
+          <h2 style="text-align: center; color: black;">{{ meses[mesNum -1] }} {{ anio }}</h2>
+          <canvasjs-chart 
+          [options]="chartOptionsPie" [styles]="{width: '100%', height:'280px'}"
+          (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+        </ion-card>
+        <ion-card>
+          <ion-list>
+            <ion-list-header>
+              <h1>Resúmen de gastos</h1>
+            </ion-list-header>
+            <ion-item *ngFor="let gasto of seriesPie">
+              <ion-label style="font-weight: 600;" slot="start">{{gasto.name}}:</ion-label>
+              <ion-label style="color: green;" slot="end">${{gasto.y}}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card> 
       </ng-template>
 
       <ng-template #barras>
-        <h2>Gastos y ahorros anuales</h2>
-        <canvasjs-chart 
-        [options]="chartOptionsCol" [styles]="{ width: '100%', height:'55%' }" 
-        (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+        <ion-card>
+          <h2 style="text-align: center; color: black;">Gastos y ahorros anuales</h2>
+        </ion-card>
+          <canvasjs-chart 
+          [options]="chartOptionsCol" [styles]="{ width: '100%', height:'55%' }" 
+          (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+        <ion-card style="margin-top: 60px;">
+          <ion-list>
+            <ion-list-header>
+              <h1>Ahorros por mes</h1>
+            </ion-list-header>
+            <ion-item *ngFor="let ahorro of ahorrosAnuales">
+              <ion-label style="font-weight: 600;" slot="start">{{ahorro.mes}}:</ion-label>
+              <ion-label slot="end">${{ahorro.ahorro}}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
       </ng-template>
   </div>
 </ion-content>
 
 <ion-footer>
   <ion-button expand="block" *ngIf="this.viewPieChart" (click)="onButtonChart('anual')">Ver Comparativa anual</ion-button>
-  <ion-button expand="block" *ngIf="!this.viewPieChart" (click)="onButtonChart('gasto')">Ver Gasto mensual</ion-button><!--
-  <ion-segment value="gasto" color="warning" (ionChange)="onChangeChart($event)">
-    <ion-segment-button value="gasto">
-      <ion-label>Gasto mensual</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="anual">
-      <ion-label>Comparativa anual</ion-label>
-    </ion-segment-button>
-  </ion-segment>-->
+  <ion-button expand="block" *ngIf="!this.viewPieChart" (click)="onButtonChart('gasto')">Ver Gasto mensual</ion-button>
 </ion-footer>

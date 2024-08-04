@@ -1,7 +1,18 @@
-h2 {
-    margin-left: 10px;
+h1 {
+    margin-left: 30px;
+    margin-top: 30px;
+    font-weight: 600;
 }
 
+h2 {
+    margin-left: 10px;
+    font-size: 26px;
+
+}
+
+ion-label {
+    font-size: 24px;
+}
 ion-input {
     margin-left: 3%;
     width: 94%;
@@ -11,5 +22,5 @@ ion-input {
 ion-button.confirm {
     
     height: 50px;
-    margin-top: 150px;
+    margin-top: 100px;
 }

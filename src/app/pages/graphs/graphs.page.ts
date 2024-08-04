@@ -21,9 +21,10 @@ export class GraphsPage implements OnInit, OnDestroy {
   public meses: Array<string> = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
   private subsDatabase: Subscription = Subscription.EMPTY;
-  private seriesPie : Array<any> = [];
-  private seriesCol1 : Array<any> = [];
-  private seriesCol2 : Array<any> = [];
+  public seriesPie : Array<any> = [];
+  public seriesCol1 : Array<any> = [];
+  public seriesCol2 : Array<any> = [];
+  public ahorrosAnuales: Array<any> = [];
 
   constructor(private router: Router, private data: DatabaseService, private auth: AuthService) { }
 
@@ -47,13 +48,11 @@ export class GraphsPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void 
-  {
+  ngOnDestroy(): void {
     this.subsDatabase.unsubscribe();
   }
 
-  onChangeChart(selection: any) 
-  {
+  onChangeChart(selection: any) {
     if(selection.target.value == 'gasto')
     {
       this.viewPieChart = true;
@@ -64,21 +63,17 @@ export class GraphsPage implements OnInit, OnDestroy {
     }
   }
 
-  onButtonChart(value: any) 
-  {
-    if(value == 'gasto')
-    {
+  onButtonChart(value: any) {
+    if(value == 'gasto') {
       this.viewPieChart = true;
-    }
-    else
-    {
+    } else {
       this.viewPieChart = false;
     }
   }
 
   cargarGastos() {
     this.seriesPie = [];
-    let gastosCategorizados = [];
+    //let gastosCategorizados = [];
     const groupedObjects: Record<string, number> = {};
   
     this.gastosMensuales.forEach(obj => {
@@ -97,18 +92,6 @@ export class GraphsPage implements OnInit, OnDestroy {
       }
     }
     this.updateChart();
-    /*
-    for (let i = 0; i < gastosCategorizados.length; i++) {
-      const element = gastosCategorizados[i];
-      
-      if (element.importe > 0) {
-        this.seriesPie.push({ 
-          y: element.importe, 
-          name: element.categoria,
-          //id: element.id_foto
-        });
-      }
-    }*/
   }
 
   cargarAnual() {
@@ -143,21 +126,19 @@ export class GraphsPage implements OnInit, OnDestroy {
         });
       }
     });
-    this.updateChart();
-    /*
-    for (let i = 0; i < gastosAnuales.length; i++) {
-      const element = gastosAnuales[i];
-      gastosAnuales.
-      
-      if (element.egresos.length > 0) {
-        this.seriesCol1.push({ 
-        label: this.meses[element.mes -1],
-        y: element.votos,
-        //id: element.id_foto 
-        });
-      }
 
-    }*/
+    this.seriesCol2.forEach(inMes => {
+      let ingreso = inMes.y;
+      let mes = inMes.label;
+
+      let coincidencia = this.seriesCol1.find(egMes => egMes.label == mes);
+      if(coincidencia != undefined) {
+        this.ahorrosAnuales.push({ mes: mes, ahorro: ingreso - coincidencia.y});
+      }
+    });
+
+
+    this.updateChart();
   }
 
   getChartInstance(chart : Object) {
@@ -179,30 +160,14 @@ export class GraphsPage implements OnInit, OnDestroy {
     
   }
 
-  /*
-  onClickResult(e : any) {
-    const foto = this.arrayUsers.find(foto => foto.id_foto == e.dataPoint.id);
-
-    if (foto != undefined) {
-      Swal.fire({
-        heightAuto: false,
-        text: `Autor: ${foto.usuario} - Fecha: ${foto.fecha.toLocaleDateString()} ${foto.fecha.toLocaleTimeString()}`,
-        imageUrl: foto.imagen,
-        imageHeight: "350px",
-        imageWidth: "350",
-        showConfirmButton: false,
-      });
-    }
-  }*/
-
   private chart : any;
 
   public chartOptionsPie = {
     theme: "light1",
 	  data: [{
       //click: (e : any) => this.onClickResult(e),
-      type: "doughnut",
-      startAngle: -90,
+      type: "pie",
+      startAngle: -45,
       indexLabel: "{name}: ${y}",
       dataPoints: [
 		  ]

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="medium">
     <ion-title>
       Control de gastos
     </ion-title>
@@ -8,11 +8,20 @@
 
 <ion-content class="ion-padding">
   <div class="home">
-    
-    <h1>Gastos: {{ this.gastoTotal | currency : 'USD' : 'symbol' :'4.2-2'}} Umbral superado: {{ this.umbralSuperado ? 'Si' : 'No'}}</h1>
-    <h2>Sueldo: ${{ this.sueldoMensual.ingreso }} </h2>
-    <h2>Umbral: {{ this.umbralMensual.umbral }}% Cálculo: {{this.calculoUmbral}}</h2>
-    
+    <ion-card>
+      <ion-card-subtitle><h2>Gastos:</h2></ion-card-subtitle>
+      <ion-card-title><h1 [ngStyle]="{'color': this.umbralSuperado ? 'var(--ion-color-danger)' : 'var(--ion-color-dark)'}"
+        >{{ this.gastoTotal | currency : 'USD' : 'symbol' :'4.2-2'}}</h1></ion-card-title>
+      <h2 style="color: var(--ion-color-danger);" *ngIf="umbralSuperado == true">Umbral superado!</h2>
+    </ion-card>
+    <ion-card>
+      <ion-card-subtitle><h2>Sueldo:</h2></ion-card-subtitle>
+      <ion-card-title><h2>{{ this.sueldoMensual.ingreso | currency : 'USD' : 'symbol' :'4.2-2'}}</h2></ion-card-title>
+    </ion-card>
+    <ion-card>
+      <ion-card-subtitle><h2>Umbral: {{ this.umbralMensual.umbral }}%</h2></ion-card-subtitle>
+      <ion-card-title><h2>Cálculo: {{this.calculoUmbral | currency : 'USD' : 'symbol' :'4.2-2'}}</h2></ion-card-title>
+    </ion-card>
     <ion-grid>
       <ion-row>
         <ion-col class="head">
@@ -52,7 +61,7 @@
     <ion-button (click)="navigate()">
       Visualizar gráfico de gastos
     </ion-button>-->
-    <ion-fab slot="fixed" vertical="bottom" horizontal="start">
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
       <ion-fab-button color="danger" (click)="cerraSesion()"><ion-icon name="power-sharp" size="large"></ion-icon></ion-fab-button>
     </ion-fab>
   </div>
